@@ -14,6 +14,16 @@ function App() {
   const [url, setUrl] = useState("https://swapi.dev/api/starships");
   const [moreData, setMoreData] = useState([]);
   const [filter, setFilter] = useState("");
+ // const [filteredData, setFilteredData] = useState([]);
+//  let csfiltereddata = moreData.map((k) =>
+//  k.results ? {...k,results:k?.results?.filter((t) =>
+//    filter == ""
+//      ? true
+//      : (t.model.toLowerCase().includes(filter.toLowerCase()) ||
+//        t.name.toLowerCase().includes(filter.toLowerCase()))
+//  )}  : k
+//  )
+ 
   // useEffect(() => {
   //   fetchData(url);
   // }, [url]);
@@ -25,10 +35,11 @@ function App() {
   //   setMoreData((a)=>[...a,data])
   // },[data])
   useEffect(() => {
+   
     setMoreData((a) => [...a, data]);
-    
-    console.log(moreData, "moredata");
-  }, [data]);
+   // setFilteredData((a)=>moreData)
+    //console.log(moreData, "moredata");
+  }, [url,data]);
   // const fetchData = useCallback(
   //   async (csurl) => {
   //     try {
@@ -43,12 +54,17 @@ function App() {
   // );
   const fetchData =
     async (csurl) => {
+      const controller = new AbortController()
       try {
-        const response = await fetch(csurl);
+        
+        const response = await fetch(csurl,{signal:controller.signal});
         const data = await response.json();
         setData(data);
       } catch (error) {
         console.error(error);
+      }
+      return () => {
+        controller.abort()
       }
     }
    
@@ -57,29 +73,40 @@ function App() {
     setUrl(() => data.next != "null" && data.next);
    // fetchData(url);
   };
-  const filterData = (str) => {
-    setMoreData((a) =>
-       a.map((k) =>
-      k.results ? {...k,results:data?.results?.filter((t) =>
-        str == ""
-          ? true
-          : (t.model.toLowerCase().includes(str.toLowerCase()) ||
-            t.name.toLowerCase().includes(str.toLowerCase()))
-      )}  : k
-      )
-    );
+ // const filterData = (myarray) => {
+    // myarray=myarray.map((k) =>
+    // k.results ? {...k,results:k?.results?.filter((t) =>
+    //   filter == ""
+    //     ? true
+    //     : (t.model.toLowerCase().includes(filter.toLowerCase()) ||
+    //       t.name.toLowerCase().includes(filter.toLowerCase()))
+    // )}  : k
+    // )
+    // console.log(myarray)
+    // return myarray
+    
+    // setFilteredData((a) =>
+    //    moreData.map((k) =>
+    //   k.results ? {...k,results:k?.results?.filter((t) =>
+    //     str == ""
+    //       ? true
+    //       : (t.model.toLowerCase().includes(str.toLowerCase()) ||
+    //         t.name.toLowerCase().includes(str.toLowerCase()))
+    //   )}  : k
+    //   )
+    // );
+
   
    // console.log(filter,'filtertype')
-  };
+  //};
  // console.log(url);
-  console.log(moreData,'moredatafiltered')
+  //console.log(moreData,'moredatafiltered')
   return (
     <div className="App ">
       
-      <Routes>
-  <Route  path="/"  element={ <Cards setFilter={setFilter} filterData={filterData} filter={filter} moreData={moreData} LoadData={LoadData}/>} />
+    <Routes>
+  <Route  path="/"  element={ <Cards  setFilter={setFilter}  filter={filter} moreData={moreData} LoadData={LoadData}/>} />
   <Route path="/singlepage" element={<SinglePage />} />
-  
 </Routes>
     </div>
   );

@@ -1,7 +1,20 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 
-const Cards = ({ setFilter, filter, moreData, LoadData, filterData }) => {
+const Cards = ({ setFilter, filter, moreData, LoadData }) => {
+  const [csfiltereddata2,setFilteredData2]=useState(moreData)
+  useEffect(()=> {
+ setFilteredData2(moreData)
+  },[moreData])
+  const myfilter = () => {
+  setFilteredData2(moreData.map((k) =>
+  k.results ? {...k,results:k?.results?.filter((t) =>
+    filter == ""
+      ? true
+      : (t.model.toLowerCase().includes(filter.toLowerCase()) ||
+        t.name.toLowerCase().includes(filter.toLowerCase()))
+  )}  : k)  )
+  }
   return (
     <div className="container mx-auto w-4/5 my-32">
       <h1 className="text-3xl font-bold text-center">STAR WARS</h1>
@@ -14,7 +27,7 @@ const Cards = ({ setFilter, filter, moreData, LoadData, filterData }) => {
           placeholder="Name / Value"
         />
         <button
-          onClick={() => filterData(filter)}
+          onClick={() => myfilter()}
           className="bg-[#007fff] hover:bg-blue-700 text-white font-bold py-2 px-8 rounded-full"
         >
           Filter
@@ -22,13 +35,9 @@ const Cards = ({ setFilter, filter, moreData, LoadData, filterData }) => {
       </div>
 
       <div className="mx-auto grid sm:grid-cols-2  md:grid-cols-3  lg:grid-cols-5 gap-4 mt-8 w-4/5">
-        {console.log(moreData, "moredatafiltered2")}
-        {console.log(filter, "filtered2")}
-        {}
-        {console.log(
-          'dd'
-        )}
-        {moreData.reduce((accumulator, current) => {
+        {/* {console.log(moreData, "moredatafiltered2")} */}
+        {/* {console.log(filteredData, "filtereddata")} */}
+        {csfiltereddata2.reduce((accumulator, current) => {
             if (!accumulator.find((item) => item.next === current.next)) {
               accumulator.push(current);
             }

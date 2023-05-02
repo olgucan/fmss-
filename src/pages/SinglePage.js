@@ -21,7 +21,7 @@ function SinglePage() {
   }
   const location = useLocation()
   const { from } = location.state
-  console.log(from,'csurl')
+ // console.log(from,'csurl')
   return (
     <div className='container mx-auto w-4/5'>
      
