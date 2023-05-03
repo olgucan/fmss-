@@ -8,7 +8,7 @@ function SinglePage() {
   useEffect(() => {
     fetchData(from);
   }, []);
-  console.log(data)
+ // console.log(data)
   const fetchData =
   async (csurl) => {
     try {
